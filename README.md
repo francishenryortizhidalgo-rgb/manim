@@ -1,140 +1,426 @@
-<p align="center">
-    <a href="https://www.manim.community/"><img src="https://raw.githubusercontent.com/ManimCommunity/manim/main/logo/cropped.png" alt="Manim Community logo"></a>
-    <br />
-    <br />
-    <a href="https://pypi.org/project/manim/"><img src="https://img.shields.io/pypi/v/manim.svg?style=flat&logo=pypi" alt="PyPI Latest Release"></a>
-    <a href="https://hub.docker.com/r/manimcommunity/manim"><img src="https://img.shields.io/docker/v/manimcommunity/manim?color=%23099cec&label=docker%20image&logo=docker" alt="Docker image"> </a>
-    <a href="https://mybinder.org/v2/gh/ManimCommunity/jupyter_examples/HEAD?filepath=basic_example_scenes.ipynb"><img src="https://mybinder.org/badge_logo.svg" alt="Launch Binder"></a>
-    <a href="http://choosealicense.com/licenses/mit/"><img src="https://img.shields.io/badge/license-MIT-red.svg?style=flat" alt="MIT License"></a>
-    <a href="https://www.reddit.com/r/manim/"><img src="https://img.shields.io/reddit/subreddit-subscribers/manim.svg?color=orange&label=reddit&logo=reddit" alt="Reddit" href=></a>
-    <a href="https://twitter.com/manimcommunity/"><img src="https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Follow%20%40manimcommunity" alt="Twitter">
-    <a href="https://manim.community/discord/"><img src="https://img.shields.io/discord/581738731934056449.svg?label=discord&color=yellow&logo=discord" alt="Discord"></a>
-    <a href="https://docs.manim.community/"><img src="https://readthedocs.org/projects/manimce/badge/?version=latest" alt="Documentation Status"></a>
-    <img src="https://github.com/ManimCommunity/manim/workflows/CI/badge.svg" alt="CI">
-    <br />
-    <br />
-    <i>An animation engine for explanatory math videos</i>
-</p>
-<hr />
-
-Manim is an animation engine for explanatory math videos. It's used to create precise animations programmatically, as demonstrated in the videos of [3Blue1Brown](https://www.3blue1brown.com/).
-
-> [!NOTE]
-> The community edition of Manim (ManimCE) is a version maintained and developed by the community. It was forked from 3b1b/manim, a tool originally created and open-sourced by Grant Sanderson, also creator of the 3Blue1Brown educational math videos. While Grant Sanderson continues to maintain his own repository, we recommend this version for its continued development, improved features, enhanced documentation, and more active community-driven maintenance. If you would like to study how Grant makes his videos, head over to his repository ([3b1b/manim](https://github.com/3b1b/manim)).
-
-## Table of Contents:
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Documentation](#documentation)
-- [Docker](#docker)
-- [Help with Manim](#help-with-manim)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Installation
-
-> [!CAUTION]
-> These instructions are for the community version _only_. Trying to use these instructions to install [3b1b/manim](https://github.com/3b1b/manim) or instructions there to install this version will cause problems. Read [this](https://docs.manim.community/en/stable/faq/installation.html#why-are-there-different-versions-of-manim) and decide which version you wish to install, then only follow the instructions for your desired version.
-
-Manim requires a few dependencies that must be installed prior to using it. If you
-want to try it out first before installing it locally, you can do so
-[in our online Jupyter environment](https://try.manim.community/).
-
-For local installation, please visit the [Documentation](https://docs.manim.community/en/stable/installation.html)
-and follow the appropriate instructions for your operating system.
-
-## Usage
-
-Manim is an extremely versatile package. The following is an example `Scene` you can construct:
-
-```python
 from manim import *
+import numpy as np
 
+# ----------------------------------------------------
+# ESCENA 1
+# INTRODUCCIÓN DOCUMENTAL
+# ----------------------------------------------------
 
-class SquareToCircle(Scene):
+class Intro(Scene):
     def construct(self):
-        circle = Circle()
-        square = Square()
-        square.flip(RIGHT)
-        square.rotate(-3 * TAU / 8)
-        circle.set_fill(PINK, opacity=0.5)
 
-        self.play(Create(square))
-        self.play(Transform(square, circle))
-        self.play(FadeOut(square))
-```
+        title = Text(
+            "The Riemann Hypothesis",
+            font_size=72
+        )
 
-In order to view the output of this scene, save the code in a file called `example.py`. Then, run the following in a terminal window:
+        subtitle = Text(
+            "A Harmonic Structure in the Complex Plane",
+            font_size=40
+        )
 
-```sh
-manim -p -ql example.py SquareToCircle
-```
+        subtitle.next_to(title,DOWN)
 
-You should see your native video player program pop up and play a simple scene in which a square is transformed into a circle. You may find some more simple examples within this
-[GitHub repository](example_scenes). You can also visit the [official gallery](https://docs.manim.community/en/stable/examples.html) for more advanced examples.
+        self.play(FadeIn(title,shift=UP))
+        self.play(Write(subtitle))
 
-Manim also ships with a `%%manim` IPython magic which allows to use it conveniently in JupyterLab (as well as classic Jupyter) notebooks. See the
-[corresponding documentation](https://docs.manim.community/en/stable/reference/manim.utils.ipython_magic.ManimMagic.html) for some guidance and
-[try it out online](https://mybinder.org/v2/gh/ManimCommunity/jupyter_examples/HEAD?filepath=basic_example_scenes.ipynb).
+        self.wait(3)
 
-## Command line arguments
 
-The general usage of Manim is as follows:
+# ----------------------------------------------------
+# ESCENA 2
+# DEFINICIÓN DE LA FUNCIÓN ZETA
+# ----------------------------------------------------
 
-![manim-illustration](https://raw.githubusercontent.com/ManimCommunity/manim/main/docs/source/_static/command.png)
+class ZetaDefinition(Scene):
+    def construct(self):
 
-The `-p` flag in the command above is for previewing, meaning the video file will automatically open when it is done rendering. The `-ql` flag is for a faster rendering at a lower quality.
+        eq = MathTex(
+            r"\zeta(s)=\sum_{n=1}^{\infty}\frac{1}{n^s}"
+        ).scale(1.5)
 
-Some other useful flags include:
+        self.play(Write(eq))
 
-- `-s` to skip to the end and just show the final frame.
-- `-n <number>` to skip ahead to the `n`'th animation of a scene.
-- `-f` show the file in the file browser.
+        sdef = MathTex(
+            r"s=\sigma+it"
+        )
 
-For a thorough list of command line arguments, visit the [documentation](https://docs.manim.community/en/stable/guides/configuration.html).
+        sdef.next_to(eq,DOWN)
 
-## Documentation
+        self.play(Write(sdef))
 
-Documentation is in progress at [ReadTheDocs](https://docs.manim.community/).
+        self.wait(3)
 
-## Docker
 
-The community also maintains a docker image (`manimcommunity/manim`), which can be found [on DockerHub](https://hub.docker.com/r/manimcommunity/manim).
-Instructions on how to install and use it can be found in our [documentation](https://docs.manim.community/en/stable/installation/docker.html).
+# ----------------------------------------------------
+# ESCENA 3
+# PRODUCTO DE EULER
+# ----------------------------------------------------
 
-## Help with Manim
+class EulerProduct(Scene):
+    def construct(self):
 
-If you need help installing or using Manim, feel free to reach out to our [Discord
-Server](https://www.manim.community/discord/) or [Reddit Community](https://www.reddit.com/r/manim). If you would like to submit a bug report or feature request, please open an issue.
+        eq = MathTex(
+            r"\zeta(s)=\prod_{p}\frac{1}{1-p^{-s}}"
+        ).scale(1.5)
 
-## Contributing
+        text = Text(
+            "Prime Number Structure",
+            font_size=36
+        )
 
-Contributions to Manim are always welcome. In particular, there is a dire need for tests and documentation. For contribution guidelines, please see the [documentation](https://docs.manim.community/en/stable/contributing.html).
+        text.next_to(eq,DOWN)
 
-However, please note that Manim is currently undergoing a major refactor. In general,
-contributions implementing new features will not be accepted in this period.
-The contribution guide may become outdated quickly; we highly recommend joining our
-[Discord server](https://www.manim.community/discord/) to discuss any potential
-contributions and keep up to date with the latest developments.
+        self.play(Write(eq))
+        self.play(FadeIn(text))
 
-Most developers on the project use `uv` for management. You'll want to have uv installed and available in your environment.
-Learn more about `uv` at its [documentation](https://docs.astral.sh/uv/) and find out how to install manim with uv at the [manim dev-installation guide](https://docs.manim.community/en/latest/contributing/development.html) in the manim documentation.
+        self.wait(3)
 
-## How to Cite Manim
 
-We acknowledge the importance of good software to support research, and we note
-that research becomes more valuable when it is communicated effectively. To
-demonstrate the value of Manim, we ask that you cite Manim in your work.
-Currently, the best way to cite Manim is to go to our
-[repository page](https://github.com/ManimCommunity/manim) (if you aren't already) and
-click the "cite this repository" button on the right sidebar. This will generate
-a citation in your preferred format, and will also integrate well with citation managers.
+# ----------------------------------------------------
+# ESCENA 4
+# PLANO COMPLEJO
+# ----------------------------------------------------
 
-## Code of Conduct
+class ComplexPlaneScene(Scene):
+    def construct(self):
 
-Our full code of conduct, and how we enforce it, can be read on [our website](https://docs.manim.community/en/stable/conduct.html).
+        plane = ComplexPlane(
+            x_range=[-2,2],
+            y_range=[-30,30]
+        )
 
-## License
+        labels = plane.get_axis_labels(
+            MathTex(r"\Re(s)"),
+            MathTex(r"\Im(s)")
+        )
 
-The software is double-licensed under the MIT license, with copyright by 3blue1brown LLC (see LICENSE), and copyright by Manim Community Developers (see LICENSE.community).
+        self.play(Create(plane))
+        self.play(Write(labels))
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 5
+# LÍNEA CRÍTICA
+# ----------------------------------------------------
+
+class CriticalLine(Scene):
+    def construct(self):
+
+        plane = ComplexPlane(
+            x_range=[-2,2],
+            y_range=[-30,30]
+        )
+
+        self.add(plane)
+
+        line = Line(
+            plane.c2p(0.5,-30),
+            plane.c2p(0.5,30),
+            color=YELLOW
+        )
+
+        label = MathTex(
+            r"\Re(s)=\frac12"
+        )
+
+        label.next_to(line,RIGHT)
+
+        self.play(Create(line))
+        self.play(Write(label))
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 6
+# REGIÓN CRÍTICA
+# ----------------------------------------------------
+
+class CriticalStrip(Scene):
+    def construct(self):
+
+        plane = ComplexPlane(
+            x_range=[-1,2],
+            y_range=[-30,30]
+        )
+
+        self.add(plane)
+
+        strip = Rectangle(
+            height=8,
+            width=2,
+            color=BLUE
+        ).set_opacity(0.3)
+
+        strip.move_to(plane.c2p(0.5,0))
+
+        eq = MathTex(
+            r"0<\Re(s)<1"
+        )
+
+        eq.to_edge(UP)
+
+        self.play(FadeIn(strip))
+        self.play(Write(eq))
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 7
+# CEROS NO TRIVIALES
+# ----------------------------------------------------
+
+class RiemannZeros(Scene):
+    def construct(self):
+
+        plane = ComplexPlane(
+            x_range=[0,1],
+            y_range=[-40,40]
+        )
+
+        self.add(plane)
+
+        zeros = [
+            14.134725,
+            21.022040,
+            25.010857,
+            30.424876,
+            32.935061,
+            37.586178,
+            40.918719
+        ]
+
+        dots = VGroup()
+
+        for z in zeros:
+
+            dot = Dot(
+                plane.c2p(0.5,z),
+                color=RED
+            )
+
+            dots.add(dot)
+
+        self.play(
+            LaggedStart(
+                *[FadeIn(d) for d in dots],
+                lag_ratio=0.3
+            )
+        )
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 8
+# SIMETRÍA
+# ----------------------------------------------------
+
+class Symmetry(Scene):
+    def construct(self):
+
+        plane = ComplexPlane()
+
+        self.add(plane)
+
+        y = 14.134725
+
+        p1 = Dot(plane.c2p(0.5,y),color=BLUE)
+        p2 = Dot(plane.c2p(0.5,-y),color=BLUE)
+
+        line = Line(
+            p1.get_center(),
+            p2.get_center()
+        )
+
+        eq = MathTex(
+            r"\rho \rightarrow 1-\rho"
+        )
+
+        eq.to_edge(DOWN)
+
+        self.play(FadeIn(p1,p2))
+        self.play(Create(line))
+        self.play(Write(eq))
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 9
+# ESTRUCTURA OSCILATORIA
+# ----------------------------------------------------
+
+class Oscillations(Scene):
+    def construct(self):
+
+        axes = Axes(
+            x_range=[0,10],
+            y_range=[-2,2]
+        )
+
+        graph = axes.plot(
+            lambda x: np.cos(2*np.pi*x),
+        )
+
+        self.play(Create(axes))
+        self.play(Create(graph))
+
+        eq = MathTex(
+            r"e^{-ix}+e^{ix}=2\cos(x)"
+        )
+
+        eq.to_edge(UP)
+
+        self.play(Write(eq))
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 10
+# ESTRUCTURA ARMÓNICA
+# ----------------------------------------------------
+
+class HarmonicStructure(Scene):
+    def construct(self):
+
+        eq = MathTex(
+            r"\sum_{n=1}^{\infty} n^{-1/2}(e^{-ib\ln n}+e^{ib\ln n})"
+        )
+
+        self.play(Write(eq))
+
+        box = SurroundingRectangle(eq)
+
+        self.play(Create(box))
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 11
+# PERTURBACIÓN
+# ----------------------------------------------------
+
+class Perturbation(Scene):
+    def construct(self):
+
+        eq = MathTex(
+            r"s=q+ib"
+        )
+
+        cond = MathTex(
+            r"q\neq\frac12"
+        )
+
+        cond.next_to(eq,DOWN)
+
+        self.play(Write(eq))
+        self.play(Write(cond))
+
+        warn = Text(
+            "Loss of harmonic balance",
+            color=RED
+        )
+
+        warn.to_edge(DOWN)
+
+        self.play(Write(warn))
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 12
+# ESTABILIDAD
+# ----------------------------------------------------
+
+class Stability(Scene):
+    def construct(self):
+
+        eq = MathTex(
+            r"n^{-1/2}+n^{-1/2}=2n^{-1/2}"
+        )
+
+        self.play(Write(eq))
+
+        box = SurroundingRectangle(
+            eq,
+            color=GREEN
+        )
+
+        self.play(Create(box))
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 13
+# INTERPRETACIÓN ESPECTRAL
+# ----------------------------------------------------
+
+class Spectral(Scene):
+    def construct(self):
+
+        eq = MathTex(
+            r"\hat{H}\psi_n = \lambda_n \psi_n"
+        )
+
+        text = Text(
+            "Spectral Interpretation",
+            font_size=36
+        )
+
+        text.next_to(eq,DOWN)
+
+        self.play(Write(eq))
+        self.play(FadeIn(text))
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 14
+# CONVERGENCIA
+# ----------------------------------------------------
+
+class Convergence(Scene):
+    def construct(self):
+
+        eq = MathTex(
+            r"\lim_{t\to\infty} |\Re(\rho)-1/2| = 0"
+        )
+
+        self.play(Write(eq))
+
+        self.wait(3)
+
+
+# ----------------------------------------------------
+# ESCENA 15
+# CONCLUSIÓN
+# ----------------------------------------------------
+
+class Conclusion(Scene):
+    def construct(self):
+
+        eq = MathTex(
+            r"\Re(s)=\frac12"
+        ).scale(2)
+
+        text = Text(
+            "Critical Line Stability",
+            font_size=40
+        )
+
+        text.next_to(eq,DOWN)
+
+        self.play(Write(eq))
+        self.play(Write(text))
+
+        self.wait(4)
